@@ -16,6 +16,7 @@ const startScreen = document.getElementById('start-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const finalScoreEl = document.getElementById('final-score');
 const customerSprite = document.getElementById('customer-sprite');
+const dragItemEl = document.getElementById('drag-item');
 
 // New Workstation Elements
 const prepStations = document.querySelectorAll('.prep-station');
@@ -26,6 +27,10 @@ let score = 0;
 let timer = GAME_DURATION;
 let currentOrder = null;
 let gameInterval = null;
+
+// Drag and Drop State
+let isDragging = false;
+let draggedIngredientId = null;
 
 // Represents the state of our two main work slots
 let workSlots = [
@@ -148,6 +153,7 @@ function renderIngredients() {
         ingEl.dataset.id = ingredient.id;
         ingEl.style.backgroundImage = `url(${ingredient.img})`;
         ingEl.title = ingredient.name;
+        ingEl.draggable = false; // Disable native drag
         ingredientsBar.appendChild(ingEl);
     });
 }
@@ -217,6 +223,15 @@ function assignOrderToSlot(order) {
             highlightStation(targetSlot.ui.prep);
         }
     }
+    
+    // Also highlight potential drop zones for clarity
+    document.querySelectorAll('.prep-station, .plate-container').forEach(el => {
+       if (el.classList.contains('highlight')) {
+           el.classList.add('drop-target');
+       } else {
+           el.classList.remove('drop-target');
+       }
+    });
 }
 
 function highlightStation(element) {
@@ -227,40 +242,35 @@ function highlightStation(element) {
     }
 }
 
-function handleIngredientClick(e) {
-    const target = e.target.closest('.ingredient');
-    if (!target || !currentOrder) return;
-
+function addIngredientToStation(ingredientId, stationEl) {
     playSound('select.mp3');
-    const ingredientId = target.dataset.id;
-    
-    let consumed = false;
 
-    // Check blender first
-    if (blenderSlot.state === 'blending' && blenderSlot.order.ingredients.includes(ingredientId)) {
+    let consumed = false;
+    const stationId = stationEl.id || stationEl.dataset.station;
+
+    // Find the relevant slot based on stationId
+    if (stationId === 'blender' && blenderSlot.state === 'blending' && blenderSlot.order.ingredients.includes(ingredientId)) {
         blenderSlot.items.push(ingredientId);
         consumed = true;
-    }
+    } else {
+        const targetSlot = workSlots.find(s => s.ui.prep.dataset.station === stationId || s.ui.plate.id === stationId);
+        if (targetSlot && targetSlot.order && targetSlot.order.ingredients.includes(ingredientId)) {
+            if (targetSlot.state === 'prepping' || targetSlot.state === 'on_plate') {
+                 targetSlot.items.push(ingredientId);
 
-    // Check plate and pan slots
-    if (!consumed) {
-        for (const slot of workSlots) {
-            if (slot.order && slot.order.ingredients.includes(ingredientId)) {
-                if (slot.state === 'prepping' || slot.state === 'on_plate') {
-                    slot.items.push(ingredientId);
-                    
-                    // If it's a cooking recipe and all ingredients are in the pan, start cooking
-                    if (slot.state === 'prepping' && slot.items.length === slot.order.ingredients.length) {
-                        startCooking(slot);
-                    }
-                    consumed = true;
-                    break; 
+                if (targetSlot.state === 'prepping' && targetSlot.items.length === targetSlot.order.ingredients.length) {
+                    startCooking(targetSlot);
                 }
+                consumed = true;
             }
         }
     }
-    
-    updateAllDisplays();
+
+    if (consumed) {
+        updateAllDisplays();
+    } else {
+        playSound('error.mp3');
+    }
 }
 
 function startCooking(slot) {
@@ -378,6 +388,7 @@ function handleServe() {
         customerSprite.style.animation = 'slideOut 0.5s ease-in forwards';
         currentOrder = null; // Clear current order
         highlightStation(null); // Clear highlights
+         document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
         setTimeout(() => {
             generateNewOrder();
         }, 500);
@@ -415,6 +426,7 @@ function handleTrash() {
         customerSprite.style.animation = 'slideOut 0.5s ease-in forwards';
         currentOrder = null;
         highlightStation(null);
+        document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
         setTimeout(() => {
             generateNewOrder();
         }, 500);
@@ -432,8 +444,75 @@ function updateTimer() {
     timerEl.textContent = timer;
 }
 
+// --- Drag and Drop Implementation ---
+
+function dragStart(e) {
+    const target = e.target.closest('.ingredient');
+    if (!target) return;
+
+    // Prevent default for mouse clicks on images
+    e.preventDefault();
+
+    isDragging = true;
+    draggedIngredientId = target.dataset.id;
+    const ingredient = INGREDIENTS.find(i => i.id === draggedIngredientId);
+
+    // Setup visual drag item
+    dragItemEl.style.backgroundImage = `url(${ingredient.img})`;
+    dragItemEl.style.display = 'block';
+
+    const touch = e.touches ? e.touches[0] : e;
+    moveDragItem(touch.clientX, touch.clientY);
+
+    document.addEventListener('mousemove', dragMove);
+    document.addEventListener('touchmove', dragMove, { passive: false });
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('touchend', dragEnd);
+}
+
+function dragMove(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    const touch = e.touches ? e.touches[0] : e;
+    moveDragItem(touch.clientX, touch.clientY);
+}
+
+function moveDragItem(x, y) {
+    dragItemEl.style.left = `${x}px`;
+    dragItemEl.style.top = `${y}px`;
+}
+
+function dragEnd(e) {
+    if (!isDragging) return;
+    
+    isDragging = false;
+    dragItemEl.style.display = 'none';
+
+    // Use changedTouches for touchend, otherwise use clientX/Y
+    const touch = e.changedTouches ? e.changedTouches[0] : e;
+    
+    // Hide the drag item to correctly identify element underneath
+    const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (dropTarget) {
+        const stationEl = dropTarget.closest('.prep-station, .plate-container');
+        if (stationEl && stationEl.classList.contains('drop-target')) {
+            addIngredientToStation(draggedIngredientId, stationEl);
+        }
+    }
+    
+    draggedIngredientId = null;
+    document.removeEventListener('mousemove', dragMove);
+    document.removeEventListener('touchmove', dragMove);
+    document.removeEventListener('mouseup', dragEnd);
+    document.removeEventListener('touchend', dragEnd);
+}
+
 function bindEvents() {
-    ingredientsBar.addEventListener('click', handleIngredientClick);
+    // Replaced click with drag/touch events
+    ingredientsBar.addEventListener('mousedown', dragStart);
+    ingredientsBar.addEventListener('touchstart', dragStart);
+
     serveButton.addEventListener('click', handleServe);
     trashButton.addEventListener('click', handleTrash);
 

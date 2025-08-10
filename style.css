@@ -287,6 +287,11 @@ header h1 {
     z-index: 5;
 }
 
+.drop-target {
+    outline: 3px dashed var(--primary-color);
+    outline-offset: 4px;
+}
+
 .highlight {
     border-radius: 15px;
     box-shadow: 0 0 0 4px #ffeb3b, 0 0 20px 5px #ffeb3b;
@@ -348,10 +353,21 @@ header h1 {
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    user-select: none; /* Prevents text selection during drag */
 }
 .ingredient:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Dragging Item Style */
+#drag-item {
+    width: 70px;
+    height: 70px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transform: translate(-50%, -50%); /* Center on cursor */
+    opacity: 0.8;
 }
 
 /* Modals */
