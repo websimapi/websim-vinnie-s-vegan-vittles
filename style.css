@@ -300,3 +300,106 @@ header h1 {
 }
 
 
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        align-items: flex-start;
+    }
+
+    #game-container {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+        max-height: none;
+    }
+
+    header {
+        padding: 10px 15px;
+    }
+
+    header h1 {
+        font-size: 1.2rem;
+    }
+
+    .stat-box {
+        padding: 4px 10px;
+        font-size: 0.9rem;
+    }
+
+    #game-area {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    #customer-area, #work-station {
+        padding: 10px;
+        width: 100%;
+    }
+
+    #customer-area {
+        flex: 0 1 35%; /* Give customer area a bit less space */
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    #customer-sprite {
+        width: 100px;
+        height: 100px;
+    }
+
+    #order-bubble {
+        width: 90%;
+        padding: 10px;
+    }
+
+    #order-display {
+        font-size: 1rem;
+    }
+
+    #work-station {
+       flex: 1 1 50%; /* Give workstation more space */
+    }
+
+    #assembly-area {
+        height: 150px;
+    }
+
+    #plate {
+        width: 140px;
+        height: 140px;
+    }
+
+    .dish-ingredient {
+        width: 40px;
+        height: 40px;
+    }
+
+    #controls button {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    #ingredients-bar {
+        padding: 10px;
+        gap: 10px;
+        /* Allow scrolling on the x-axis if ingredients overflow */
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+    
+    .ingredient {
+        width: 55px;
+        height: 55px;
+        flex-shrink: 0; /* Prevent ingredients from shrinking */
+    }
+    
+    .modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+}
