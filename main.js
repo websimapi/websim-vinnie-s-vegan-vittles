@@ -225,13 +225,7 @@ function assignOrderToSlot(order) {
     }
     
     // Also highlight potential drop zones for clarity
-    document.querySelectorAll('.prep-station, .plate-container').forEach(el => {
-       if (el.classList.contains('highlight')) {
-           el.classList.add('drop-target');
-       } else {
-           el.classList.remove('drop-target');
-       }
-    });
+    updateDropTargets();
 }
 
 function highlightStation(element) {
@@ -240,6 +234,27 @@ function highlightStation(element) {
     if (element) {
         element.classList.add('highlight');
     }
+}
+
+function updateDropTargets() {
+    // Clear all existing drop targets
+    document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+
+    // Set drop target for the blender if it has an active order
+    if (blenderSlot.order) {
+        blenderSlot.ui.prep.classList.add('drop-target');
+    }
+
+    // Set drop targets for work slots with active orders
+    workSlots.forEach(slot => {
+        if (slot.order) {
+            if (slot.state === 'prepping') {
+                slot.ui.prep.classList.add('drop-target');
+            } else if (slot.state === 'on_plate') {
+                slot.ui.plate.classList.add('drop-target');
+            }
+        }
+    });
 }
 
 function addIngredientToStation(ingredientId, stationEl) {
