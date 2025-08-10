@@ -29,8 +29,32 @@
 
             <div id="work-station">
                 <div id="assembly-area">
-                    <div id="plate"></div>
-                    <div id="current-dish"></div>
+                    <div id="plate-1" class="plate-container">
+                         <div class="current-dish"></div>
+                         <div class="plate-visual"></div>
+                    </div>
+                     <div id="plate-2" class="plate-container">
+                         <div class="current-dish"></div>
+                         <div class="plate-visual"></div>
+                    </div>
+                </div>
+                <div id="preparation-area">
+                    <div id="blender" class="prep-station" data-station="blender">
+                        <div class="blender-visual"></div>
+                        <div class="current-dish"></div>
+                    </div>
+                    <div id="pan-1" class="prep-station pan" data-station="pan-1">
+                        <div class="pan-visual"></div>
+                        <div class="current-dish"></div>
+                        <div class="cook-progress-bar"><div class="cook-progress"></div></div>
+                        <button class="finish-cook-button">Finish Cooking</button>
+                    </div>
+                    <div id="pan-2" class="prep-station pan" data-station="pan-2">
+                        <div class="pan-visual"></div>
+                        <div class="current-dish"></div>
+                        <div class="cook-progress-bar"><div class="cook-progress"></div></div>
+                        <button class="finish-cook-button">Finish Cooking</button>
+                    </div>
                 </div>
                 <div id="controls">
                     <button id="serve-button">Serve</button>
