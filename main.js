@@ -47,7 +47,6 @@ function playSound(soundFile) {
     source.start(0);
 }
 
-
 function init() {
     renderIngredients();
     bindEvents();
@@ -102,7 +101,29 @@ function renderIngredients() {
 function generateNewOrder() {
     const randomIndex = Math.floor(Math.random() * RECIPES.length);
     currentOrder = RECIPES[randomIndex];
-    orderDisplay.textContent = currentOrder.name;
+    
+    // Update order display to show name and ingredient icons
+    orderDisplay.innerHTML = '';
+    const orderNameEl = document.createElement('h3');
+    orderNameEl.textContent = currentOrder.name;
+    
+    const ingredientsContainer = document.createElement('div');
+    ingredientsContainer.classList.add('order-ingredients-container');
+
+    currentOrder.ingredients.forEach(ingId => {
+        const ingredient = INGREDIENTS.find(i => i.id === ingId);
+        if(ingredient) {
+            const iconEl = document.createElement('div');
+            iconEl.classList.add('order-ingredient-icon');
+            iconEl.style.backgroundImage = `url(${ingredient.img})`;
+            iconEl.title = ingredient.name;
+            ingredientsContainer.appendChild(iconEl);
+        }
+    });
+
+    orderDisplay.appendChild(orderNameEl);
+    orderDisplay.appendChild(ingredientsContainer);
+
     customerSprite.style.display = 'block';
     customerSprite.style.animation = 'none';
     void customerSprite.offsetWidth; // Trigger reflow
@@ -187,4 +208,3 @@ function bindEvents() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-

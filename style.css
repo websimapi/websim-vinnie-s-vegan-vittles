@@ -105,6 +105,7 @@ header h1 {
     border-radius: 10px;
     border: 2px solid var(--primary-color);
     width: 80%;
+    min-height: 80px; /* Added to prevent resizing issues */
     text-align: center;
 }
 
@@ -122,7 +123,32 @@ header h1 {
 #order-display {
     font-weight: 600;
     color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+#order-display h3 {
+    margin: 0;
     font-size: 1.2rem;
+    line-height: 1.2;
+}
+
+.order-ingredients-container {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.order-ingredient-icon {
+    width: 35px;
+    height: 35px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #work-station {
@@ -354,10 +380,16 @@ header h1 {
     #order-bubble {
         width: 90%;
         padding: 10px;
+        min-height: 70px;
     }
 
-    #order-display {
+    #order-display h3 {
         font-size: 1rem;
+    }
+    
+    .order-ingredient-icon {
+        width: 30px;
+        height: 30px;
     }
 
     #work-station {
