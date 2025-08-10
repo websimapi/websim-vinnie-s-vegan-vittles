@@ -1,0 +1,302 @@
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #8D6E63; /* Brown */
+    --background-color: #F1F8E9; /* Light Green */
+    --font-color: #3E2723; /* Dark Brown */
+    --white: #FFFFFF;
+    --light-gray: #f4f4f4;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--font-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('restaurant_background.png');
+    background-size: cover;
+    background-position: center;
+}
+
+#game-container {
+    width: 90vw;
+    max-width: 1000px;
+    height: 90vh;
+    max-height: 700px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid var(--secondary-color);
+}
+
+header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 1.5rem;
+}
+
+#stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-box {
+    background-color: rgba(255,255,255,0.2);
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+#game-area {
+    flex-grow: 1;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+#customer-area, #work-station {
+    flex: 1;
+    background-color: var(--light-gray);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#customer-area {
+    justify-content: center;
+    gap: 20px;
+}
+
+#customer-sprite {
+    width: 150px;
+    height: 150px;
+    background-image: url('customer.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#order-bubble {
+    position: relative;
+    background-color: var(--white);
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid var(--primary-color);
+    width: 80%;
+    text-align: center;
+}
+
+#order-bubble::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 15px 15px 15px;
+    border-style: solid;
+    border-color: transparent transparent var(--primary-color) transparent;
+}
+
+#order-display {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+#work-station {
+    justify-content: space-between;
+}
+
+#assembly-area {
+    width: 100%;
+    height: 200px;
+    position: relative;
+}
+
+#plate {
+    width: 180px;
+    height: 180px;
+    background-color: #fff;
+    border: 3px solid var(--secondary-color);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+#current-dish {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 30px;
+}
+
+.dish-ingredient {
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: -5px;
+    animation: dropIn 0.3s ease-out;
+}
+
+@keyframes dropIn {
+    from { transform: translateY(-50px) scale(0.5); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+#controls {
+    display: flex;
+    gap: 15px;
+}
+
+#controls button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#serve-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+#serve-button:hover {
+    background-color: #388E3C;
+}
+
+#trash-button {
+    background-color: var(--secondary-color);
+    color: white;
+}
+#trash-button:hover {
+    background-color: #6D4C41;
+}
+
+#ingredients-bar {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.ingredient {
+    width: 60px;
+    height: 60px;
+    background-color: var(--white);
+    border-radius: 10px;
+    border: 2px solid var(--background-color);
+    cursor: pointer;
+    background-size: 85%;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+.ingredient:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.modal-content button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-content button:hover {
+    background-color: #388E3C;
+}
+
+

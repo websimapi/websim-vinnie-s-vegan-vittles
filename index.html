@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinnie's Vegan Vittles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <header>
+            <h1>Vinnie's Vegan Vittles</h1>
+            <div id="stats">
+                <div class="stat-box">Score: <span id="score">0</span></div>
+                <div class="stat-box">Time: <span id="timer">60</span></div>
+            </div>
+        </header>
+
+        <main id="game-area">
+            <div id="customer-area">
+                <div id="customer-sprite"></div>
+                <div id="order-bubble">
+                    <div id="order-display"></div>
+                </div>
+            </div>
+
+            <div id="work-station">
+                <div id="assembly-area">
+                    <div id="plate"></div>
+                    <div id="current-dish"></div>
+                </div>
+                <div id="controls">
+                    <button id="serve-button">Serve</button>
+                    <button id="trash-button">Trash</button>
+                </div>
+            </div>
+        </main>
+
+        <footer id="ingredients-bar">
+            <!-- Ingredients will be populated by JS -->
+        </footer>
+    </div>
+
+    <div id="start-screen" class="modal-overlay active">
+        <div class="modal-content">
+            <h2>Welcome to Vinnie's!</h2>
+            <p>Assemble the customer's order by clicking the ingredients in the correct order. Serve as many as you can before time runs out!</p>
+            <button id="start-button">Start Cooking</button>
+        </div>
+    </div>
+
+    <div id="game-over-screen" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Game Over!</h2>
+            <p>Your final score is: <span id="final-score">0</span></p>
+            <button id="restart-button">Play Again</button>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
+
